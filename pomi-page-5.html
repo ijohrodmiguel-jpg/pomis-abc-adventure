@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Letter and Picture Match</title><link rel="stylesheet" href="style.css"></head>
+<body><main class="booklet"><img src="pomi-page-5.png" alt="Letter and Picture Match" class="page-image">
+<section class="controls"><h2>🍎 Letter & Picture Match</h2>
+<p>Choose the picture that starts with each letter.</p>
+<div id="lp"></div><div class="score" id="score">0 / 5 matched</div><div class="message" id="message"></div>
+<a id="next" class="navbtn next" href="pomi-page-6.html">NEXT →</a><div class="footer-nav"><a class="navbtn" href="pomi-page-4.html">← BACK</a><a class="navbtn" href="pomi-page-6.html">NEXT →</a><a class="navbtn" href="index.html">🏠 HOME</a></div></section></main>
+<script>const data=[
+ ['A',['🐶 Dog','🍎 Apple','🐘 Elephant'],'🍎 Apple'],
+ ['B',['🐱 Cat','🏀 Ball','🍎 Apple'],'🏀 Ball'],
+ ['C',['🐱 Cat','🐘 Elephant','🏀 Ball'],'🐱 Cat'],
+ ['D',['🍎 Apple','🐶 Dog','🐘 Elephant'],'🐶 Dog'],
+ ['E',['🏀 Ball','🐱 Cat','🐘 Elephant'],'🐘 Elephant']
+];
+let done=0;
+const lp=document.getElementById('lp');
+data.forEach((row,i)=>{
+ const box=document.createElement('div');box.className='quiz-q activity-card';
+ box.innerHTML='<strong>'+row[0]+' — Choose the picture</strong><div class="grid"></div>';
+ const grid=box.querySelector('.grid');
+ row[1].forEach(x=>{const b=document.createElement('button');b.className='choice';b.textContent=x;b.onclick=()=>matchPic(b,x,row[2]);grid.appendChild(b)});
+ lp.appendChild(box);
+});
+function matchPic(b,x,correct){
+ if(b.parentElement.parentElement.dataset.done)return;
+ if(x===correct){b.classList.add('correct');b.parentElement.parentElement.dataset.done='1';done++;document.getElementById('score').textContent=done+' / 5 matched';
+   if(done===5){markPomiDone(5);document.getElementById('message').textContent='🎉 Amazing! You matched all the letters and pictures!';document.getElementById('next').style.display='inline-block';}
+ }else{b.classList.add('wrong');document.getElementById('message').textContent='😊 Try again! Think about the first sound of the word.';setTimeout(()=>b.classList.remove('wrong'),300);}
+}</script><script src="app.js"></script></body></html>

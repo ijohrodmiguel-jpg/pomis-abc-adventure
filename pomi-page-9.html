@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Pomi's ABC Achievement</title><link rel="stylesheet" href="style.css"></head>
+<body><main class="booklet"><img src="pomi-page-9.png" alt="Pomi's ABC Achievement" class="page-image">
+<section class="controls"><div class="certificate">
+<h2>🏆 Pomi's ABC Achievement</h2>
+<p><strong>Great job, ABC Explorer! 🐱💜</strong></p>
+<p>You explored the alphabet, matched letters and pictures, and completed fun ABC activities with Pomi!</p>
+<h2>🎉 ABC EXPLORER 🎉</h2>
+<p>I can recognize letters A–Z!</p>
+<p>I can match uppercase and lowercase letters!</p>
+<p>I can find letters in words and pictures!</p>
+<label>Name: <input id="name" type="text" placeholder="Your name"></label>
+<br><br>
+<label>Date: <input id="date" type="date"></label>
+<br><br>
+<button onclick="showAchievement()">CELEBRATE! 🎉</button>
+<div class="message" id="message"></div>
+</div>
+<a class="navbtn" href="index.html">🏠 BACK TO COVER</a><div class="footer-nav"><a class="navbtn" href="pomi-page-8.html">← BACK</a><a class="navbtn" href="index.html">🏠 HOME</a></div></section></main>
+<script>function showAchievement(){
+ const n=document.getElementById('name').value.trim()||'ABC Explorer';
+ document.getElementById('message').textContent='🎉 Congratulations, '+n+'! Pomi is proud of you! 💜🐱';
+}</script><script src="app.js"></script></body></html>

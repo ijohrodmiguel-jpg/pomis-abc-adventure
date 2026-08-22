@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Pomi's ABC Story</title><link rel="stylesheet" href="style.css"></head>
+<body><main class="booklet"><img src="pomi-page-2.png" alt="Pomi's ABC Story" class="page-image">
+<section class="controls"><h2>📖 Story Time with Pomi</h2>
+<p>Read the story on the page above. Try to spot the letters A–E.</p>
+<div class="timer" id="timer">1:00</div>
+<button onclick="startTimer()">START READING TIMER</button>
+<div class="message" id="message"></div>
+<a class="navbtn" href="pomi-page-3.html">NEXT →</a><div class="footer-nav"><a class="navbtn" href="pomi-page-1.html">← BACK</a><a class="navbtn" href="pomi-page-3.html">NEXT →</a><a class="navbtn" href="index.html">🏠 HOME</a></div></section></main>
+<script>let left=60,run=false,t;
+function startTimer(){
+ if(run)return; run=true; left=60; document.getElementById('message').textContent='';
+ t=setInterval(()=>{left--; let s=left%60; document.getElementById('timer').textContent=Math.floor(left/60)+':'+String(s).padStart(2,'0');
+ if(left<=0){clearInterval(t);run=false;markPomiDone(2);document.getElementById('message').textContent='🎉 Great job, little reader!'}} ,1000);
+}</script><script src="app.js"></script></body></html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ABC Quick Quiz</title><link rel="stylesheet" href="style.css"></head>
+<body><main class="booklet"><img src="pomi-page-7.png" alt="ABC Quick Quiz" class="page-image">
+<section class="controls"><h2>🎯 ABC Quick Quiz</h2>
+<p>Answer all five questions.</p><div id="quiz"></div>
+<div class="score" id="score">0 / 5 correct</div><div class="message" id="message"></div>
+<a id="next" class="navbtn next" href="pomi-page-8.html">NEXT →</a><div class="footer-nav"><a class="navbtn" href="pomi-page-6.html">← BACK</a><a class="navbtn" href="pomi-page-8.html">NEXT →</a><a class="navbtn" href="index.html">🏠 HOME</a></div></section></main>
+<script>const quiz=[
+ ['Which letter comes after F?',['E','G','H'],'G'],
+ ['Which lowercase letter matches M?',['n','m','w'],'m'],
+ ['Which letter is missing? P – Q – ? – S',['R','T','U'],'R'],
+ ['Which picture starts with B?',['🍎 Apple','🏀 Ball','🐱 Cat'],'🏀 Ball'],
+ ['Which letter comes before Y?',['W','X','Z'],'X']
+];
+let qscore=0;
+const qroot=document.getElementById('quiz');
+quiz.forEach((q,i)=>{
+ const box=document.createElement('div');box.className='quiz-q activity-card';
+ box.innerHTML='<strong>Question '+(i+1)+': '+q[0]+'</strong><div class="grid"></div>';
+ q[1].forEach(x=>{const b=document.createElement('button');b.className='answer-btn';b.textContent=x;b.onclick=()=>answerQuiz(b,x,q[2],box);box.querySelector('.grid').appendChild(b)});
+ qroot.appendChild(box);
+});
+function answerQuiz(b,x,c,box){
+ if(box.dataset.done)return;
+ if(x===c){b.classList.add('correct');box.dataset.done='1';qscore++;document.getElementById('score').textContent=qscore+' / 5 correct';
+   if(qscore===5){markPomiDone(7);document.getElementById('message').textContent='🏆 Excellent! You completed the ABC Quick Quiz!';document.getElementById('next').style.display='inline-block';}
+ }else{b.classList.add('wrong');document.getElementById('message').textContent='😊 Nice try! Choose another answer.';setTimeout(()=>b.classList.remove('wrong'),300);}
+}</script><script src="app.js"></script></body></html>
