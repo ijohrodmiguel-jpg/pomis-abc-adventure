@@ -1,29 +1,723 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>What's Missing</title><link rel="stylesheet" href="style.css"></head>
-<body><main class="booklet"><img src="pomi-page-6.png" alt="What's Missing" class="page-image">
-<section class="controls"><h2>❓ What's Missing?</h2>
-<p>Choose the missing letter in each sequence.</p>
-<div id="missing"></div><div class="score" id="score">0 / 4 correct</div><div class="message" id="message"></div>
-<a id="next" class="navbtn next" href="pomi-page-7.html">NEXT →</a><div class="footer-nav"><a class="navbtn" href="pomi-page-5.html">← BACK</a><a class="navbtn" href="pomi-page-7.html">NEXT →</a><a class="navbtn" href="index.html">🏠 HOME</a></div></section></main>
-<script>const qs=[
- ['A B _ D E F',['C','G','H'],'C'],
- ['G H I _ K L',['J','M','N'],'J'],
- ['M N _ P Q R',['O','S','T'],'O'],
- ['S _ U V W X',['T','Y','Z'],'T']
-];
-let n=0;
-const m=document.getElementById('missing');
-qs.forEach((q,i)=>{
- const box=document.createElement('div');box.className='quiz-q activity-card';
- box.innerHTML='<strong>'+q[0]+'</strong><div class="grid"></div>';
- q[1].forEach(x=>{const b=document.createElement('button');b.className='choice';b.textContent=x;b.onclick=()=>ansMissing(b,x,q[2],box);box.querySelector('.grid').appendChild(b)});
- m.appendChild(box);
-});
-function ansMissing(b,x,c,box){
- if(box.dataset.done)return;
- if(x===c){b.classList.add('correct');box.dataset.done='1';n++;document.getElementById('score').textContent=n+' / 4 correct';
-   if(n===4){markPomiDone(6);document.getElementById('message').textContent='🎉 Wonderful! You found every missing letter!';document.getElementById('next').style.display='inline-block';}
- }else{b.classList.add('wrong');document.getElementById('message').textContent='😊 Try again! Look at the alphabet order.';setTimeout(()=>b.classList.remove('wrong'),300);}
-}</script><script src="app.js"></script></body></html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>What's Missing?</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+/* =====================================================
+   PAGE 6 INTERACTIVE IMAGE
+   ===================================================== */
+
+.missing-page {
+  position: relative;
+  width: 100%;
+  line-height: 0;
+  touch-action: manipulation;
+}
+
+.missing-page .page-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+
+/* =====================================================
+   QUESTION-MARK HOTSPOTS
+   ===================================================== */
+
+.missing-hotspot {
+  position: absolute;
+
+  width: 12.8%;
+  aspect-ratio: 1 / 1;
+
+  padding: 0;
+  border: 0;
+  border-radius: 18%;
+
+  background: transparent;
+  color: transparent;
+
+  cursor: pointer;
+
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+
+  transition: transform 0.15s ease,
+              box-shadow 0.15s ease;
+}
+
+
+/* Hover effect on computer */
+
+.missing-hotspot:hover {
+  box-shadow:
+    0 0 0 5px rgba(174,79,230,0.30);
+}
+
+
+/* Press effect */
+
+.missing-hotspot:active {
+  transform: scale(0.94);
+}
+
+
+/* Correct answer */
+
+.missing-hotspot.correct {
+  background: rgba(55,190,90,0.18);
+
+  box-shadow:
+    0 0 0 6px rgba(55,190,90,0.85);
+
+  color: #198b35;
+
+  font-size: 55%;
+  font-weight: bold;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* Wrong answer */
+
+.missing-hotspot.wrong {
+  box-shadow:
+    0 0 0 5px rgba(240,70,70,0.80);
+
+  background: rgba(240,70,70,0.12);
+
+  animation: shake 0.22s linear 2;
+}
+
+
+/* =====================================================
+   POSITIONS OF THE FOUR QUESTION MARKS
+   ===================================================== */
+
+.missing-q1 {
+  left: 35.2%;
+  top: 19.8%;
+}
+
+.missing-q2 {
+  left: 51.8%;
+  top: 35.4%;
+}
+
+.missing-q3 {
+  left: 35.2%;
+  top: 50.9%;
+}
+
+.missing-q4 {
+  left: 18.8%;
+  top: 66.0%;
+}
+
+
+/* =====================================================
+   CORRECT LETTER DISPLAY
+   ===================================================== */
+
+.answer-letter {
+  position: absolute;
+
+  width: 12.8%;
+  aspect-ratio: 1 / 1;
+
+  display: none;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 18%;
+
+  background: rgba(55,190,90,0.18);
+
+  box-shadow:
+    0 0 0 6px rgba(55,190,90,0.85);
+
+  color: #198b35;
+
+  font-size: 4.8vw;
+  font-weight: bold;
+
+  pointer-events: none;
+}
+
+.answer-letter.show {
+  display: flex;
+}
+
+
+/* =====================================================
+   ANSWER AREA
+   ===================================================== */
+
+#answer-area {
+  text-align: center;
+
+  margin: 18px auto;
+
+  max-width: 700px;
+
+  line-height: normal;
+}
+
+
+#question-prompt {
+  min-height: 32px;
+
+  margin-bottom: 12px;
+
+  font-size: 22px;
+  font-weight: bold;
+
+  color: #ae4fe6;
+}
+
+
+/* Choice buttons */
+
+.answer-choice {
+  min-width: 70px;
+  min-height: 55px;
+
+  margin: 5px;
+
+  padding: 10px 20px;
+
+  border: none;
+  border-radius: 16px;
+
+  background: #f7c4ae;
+
+  color: #5b20d9;
+
+  font-size: 26px;
+  font-weight: bold;
+
+  cursor: pointer;
+
+  touch-action: manipulation;
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+
+.answer-choice:hover {
+  transform: scale(1.05);
+
+  box-shadow:
+    0 0 0 4px rgba(174,79,230,0.22);
+}
+
+
+.answer-choice:active {
+  transform: scale(0.95);
+}
+
+
+/* =====================================================
+   ANIMATIONS
+   ===================================================== */
+
+@keyframes shake {
+
+  0%,100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-5px);
+  }
+
+  75% {
+    transform: translateX(5px);
+  }
+
+}
+
+
+/* =====================================================
+   MOBILE
+   ===================================================== */
+
+@media (max-width: 600px) {
+
+  #question-prompt {
+    font-size: 18px;
+  }
+
+  .answer-choice {
+    min-width: 58px;
+    min-height: 48px;
+
+    font-size: 22px;
+
+    padding: 8px 14px;
+  }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<main class="booklet">
+
+
+  <!-- =================================================
+       ORIGINAL PAGE IMAGE
+       ================================================= -->
+
+  <div class="missing-page">
+
+    <img
+      src="pomi-page-6.png"
+      alt="What's Missing?"
+      class="page-image"
+    >
+
+
+    <!-- ===============================================
+         QUESTION 1
+         A B ? D E F
+         Answer = C
+         =============================================== -->
+
+    <button
+      class="missing-hotspot missing-q1"
+      data-question="1"
+      aria-label="Missing letter in A B question mark D E F"
+      onclick="openQuestion(1)"
+    ></button>
+
+
+    <!-- ===============================================
+         QUESTION 2
+         G H I ? K L
+         Answer = J
+         =============================================== -->
+
+    <button
+      class="missing-hotspot missing-q2"
+      data-question="2"
+      aria-label="Missing letter in G H I question mark K L"
+      onclick="openQuestion(2)"
+    ></button>
+
+
+    <!-- ===============================================
+         QUESTION 3
+         M N ? P Q R
+         Answer = O
+         =============================================== -->
+
+    <button
+      class="missing-hotspot missing-q3"
+      data-question="3"
+      aria-label="Missing letter in M N question mark P Q R"
+      onclick="openQuestion(3)"
+    ></button>
+
+
+    <!-- ===============================================
+         QUESTION 4
+         S ? U V W X
+         Answer = T
+         =============================================== -->
+
+    <button
+      class="missing-hotspot missing-q4"
+      data-question="4"
+      aria-label="Missing letter in S question mark U V W X"
+      onclick="openQuestion(4)"
+    ></button>
+
+
+    <!-- ===============================================
+         CORRECT ANSWER OVERLAYS
+         =============================================== -->
+
+    <div
+      id="answer1"
+      class="answer-letter missing-q1"
+    >
+      C
+    </div>
+
+    <div
+      id="answer2"
+      class="answer-letter missing-q2"
+    >
+      J
+    </div>
+
+    <div
+      id="answer3"
+      class="answer-letter missing-q3"
+    >
+      O
+    </div>
+
+    <div
+      id="answer4"
+      class="answer-letter missing-q4"
+    >
+      T
+    </div>
+
+  </div>
+
+
+  <!-- =================================================
+       INTERACTION AREA
+       ================================================= -->
+
+  <section class="controls">
+
+    <h2>❓ What's Missing?</h2>
+
+    <p>
+      Tap or click a red question mark, then choose
+      the missing letter.
+    </p>
+
+
+    <!-- Answer choices appear here -->
+
+    <div id="answer-area">
+
+      <div id="question-prompt">
+        Choose a question mark above.
+      </div>
+
+      <div id="choices"></div>
+
+    </div>
+
+
+    <!-- SCORE -->
+
+    <div
+      class="score"
+      id="score"
+    >
+      0 / 4 correct
+    </div>
+
+
+    <!-- MESSAGE -->
+
+    <div
+      class="message"
+      id="message"
+    ></div>
+
+
+    <!-- ONE NEXT BUTTON ONLY -->
+
+    <a
+      id="next"
+      class="navbtn next"
+      href="pomi-page-7.html"
+      style="display:none;"
+    >
+      NEXT →
+    </a>
+
+
+    <!-- NAVIGATION -->
+
+    <div class="footer-nav">
+
+      <a
+        class="navbtn"
+        href="pomi-page-5.html"
+      >
+        ← BACK
+      </a>
+
+      <a
+        class="navbtn"
+        href="index.html"
+      >
+        🏠 HOME
+      </a>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<script>
+
+/* =====================================================
+   PAGE 6 QUESTIONS
+   ===================================================== */
+
+const questions = {
+
+  1: {
+    sequence: "A  B  _  D  E  F",
+    choices: ["C", "G", "H"],
+    answer: "C"
+  },
+
+  2: {
+    sequence: "G  H  I  _  K  L",
+    choices: ["J", "M", "N"],
+    answer: "J"
+  },
+
+  3: {
+    sequence: "M  N  _  P  Q  R",
+    choices: ["O", "S", "T"],
+    answer: "O"
+  },
+
+  4: {
+    sequence: "S  _  U  V  W  X",
+    choices: ["T", "Y", "Z"],
+    answer: "T"
+  }
+
+};
+
+
+/* =====================================================
+   GAME VARIABLES
+   ===================================================== */
+
+let currentQuestion = null;
+
+let correctCount = 0;
+
+const promptBox =
+  document.getElementById("question-prompt");
+
+const choicesBox =
+  document.getElementById("choices");
+
+const messageBox =
+  document.getElementById("message");
+
+const scoreBox =
+  document.getElementById("score");
+
+const nextButton =
+  document.getElementById("next");
+
+
+/* =====================================================
+   OPEN A QUESTION
+   ===================================================== */
+
+function openQuestion(number) {
+
+  const hotspot =
+    document.querySelector(
+      '.missing-hotspot[data-question="' + number + '"]'
+    );
+
+  if (hotspot.classList.contains("correct")) {
+    return;
+  }
+
+
+  currentQuestion = number;
+
+  const question =
+    questions[number];
+
+
+  /* Show question */
+
+  promptBox.textContent =
+    "Find the missing letter: " +
+    question.sequence;
+
+
+  /* Clear old choices */
+
+  choicesBox.innerHTML = "";
+
+  messageBox.textContent =
+    "Choose an answer.";
+
+
+  /* Create choices */
+
+  question.choices.forEach(function(letter) {
+
+    const button =
+      document.createElement("button");
+
+    button.className =
+      "answer-choice";
+
+    button.textContent =
+      letter;
+
+    button.setAttribute(
+      "aria-label",
+      "Choose " + letter
+    );
+
+
+    button.onclick =
+      function() {
+
+        checkAnswer(
+          number,
+          letter,
+          button
+        );
+
+      };
+
+
+    choicesBox.appendChild(button);
+
+  });
+
+}
+
+
+/* =====================================================
+   CHECK ANSWER
+   ===================================================== */
+
+function checkAnswer(
+  number,
+  selectedLetter,
+  button
+) {
+
+  const question =
+    questions[number];
+
+
+  const hotspot =
+    document.querySelector(
+      '.missing-hotspot[data-question="' + number + '"]'
+    );
+
+
+  /* CORRECT */
+
+  if (selectedLetter === question.answer) {
+
+    hotspot.classList.add("correct");
+
+    hotspot.textContent =
+      question.answer;
+
+
+    /* Show correct letter overlay */
+
+    const answerOverlay =
+      document.getElementById(
+        "answer" + number
+      );
+
+    answerOverlay.classList.add("show");
+
+
+    /* Disable hotspot */
+
+    hotspot.disabled = true;
+
+
+    /* Count */
+
+    correctCount++;
+
+
+    scoreBox.textContent =
+      correctCount + " / 4 correct";
+
+
+    messageBox.textContent =
+      "🌟 Great job! That's correct!";
+
+
+    /* Clear choices */
+
+    choicesBox.innerHTML = "";
+
+
+    promptBox.textContent =
+      "Great job! Choose another red question mark.";
+
+
+    /* ALL FOUR CORRECT */
+
+    if (correctCount === 4) {
+
+      markPomiDone(6);
+
+
+      messageBox.textContent =
+        "🎉 Wonderful! You found every missing letter!";
+
+
+      promptBox.textContent =
+        "🎉 All four missing letters are correct!";
+
+
+      nextButton.style.display =
+        "inline-block";
+
+    }
+
+  }
+
+
+  /* WRONG */
+
+  else {
+
+    button.classList.add("wrong");
+
+    messageBox.textContent =
+      "😊 Try again! Look at the alphabet order.";
+
+
+    setTimeout(function() {
+
+      button.classList.remove("wrong");
+
+    }, 450);
+
+  }
+
+}
+
+</script>
+
+
+<!-- MAIN POMI JAVASCRIPT -->
+
+<script src="app.js"></script>
+
+</body>
+</html>

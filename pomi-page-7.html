@@ -1,30 +1,465 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>ABC Quick Quiz</title><link rel="stylesheet" href="style.css"></head>
-<body><main class="booklet"><img src="pomi-page-7.png" alt="ABC Quick Quiz" class="page-image">
-<section class="controls"><h2>🎯 ABC Quick Quiz</h2>
-<p>Answer all five questions.</p><div id="quiz"></div>
-<div class="score" id="score">0 / 5 correct</div><div class="message" id="message"></div>
-<a id="next" class="navbtn next" href="pomi-page-8.html">NEXT →</a><div class="footer-nav"><a class="navbtn" href="pomi-page-6.html">← BACK</a><a class="navbtn" href="pomi-page-8.html">NEXT →</a><a class="navbtn" href="index.html">🏠 HOME</a></div></section></main>
-<script>const quiz=[
- ['Which letter comes after F?',['E','G','H'],'G'],
- ['Which lowercase letter matches M?',['n','m','w'],'m'],
- ['Which letter is missing? P – Q – ? – S',['R','T','U'],'R'],
- ['Which picture starts with B?',['🍎 Apple','🏀 Ball','🐱 Cat'],'🏀 Ball'],
- ['Which letter comes before Y?',['W','X','Z'],'X']
-];
-let qscore=0;
-const qroot=document.getElementById('quiz');
-quiz.forEach((q,i)=>{
- const box=document.createElement('div');box.className='quiz-q activity-card';
- box.innerHTML='<strong>Question '+(i+1)+': '+q[0]+'</strong><div class="grid"></div>';
- q[1].forEach(x=>{const b=document.createElement('button');b.className='answer-btn';b.textContent=x;b.onclick=()=>answerQuiz(b,x,q[2],box);box.querySelector('.grid').appendChild(b)});
- qroot.appendChild(box);
-});
-function answerQuiz(b,x,c,box){
- if(box.dataset.done)return;
- if(x===c){b.classList.add('correct');box.dataset.done='1';qscore++;document.getElementById('score').textContent=qscore+' / 5 correct';
-   if(qscore===5){markPomiDone(7);document.getElementById('message').textContent='🏆 Excellent! You completed the ABC Quick Quiz!';document.getElementById('next').style.display='inline-block';}
- }else{b.classList.add('wrong');document.getElementById('message').textContent='😊 Nice try! Choose another answer.';setTimeout(()=>b.classList.remove('wrong'),300);}
-}</script><script src="app.js"></script></body></html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ABC Quick Quiz</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+.interactive-page{
+    position:relative;
+    width:100%;
+    line-height:0;
+    touch-action:manipulation;
+}
+
+.interactive-page .page-image{
+    width:100%;
+    height:auto;
+    display:block;
+}
+
+.quiz-hotspot{
+    position:absolute;
+    width:8.7%;
+    aspect-ratio:1;
+    padding:0;
+    border:0;
+    border-radius:20%;
+    background:transparent;
+    color:transparent;
+    cursor:pointer;
+    touch-action:manipulation;
+    -webkit-tap-highlight-color:transparent;
+}
+
+.quiz-hotspot:hover{
+    box-shadow:0 0 0 4px rgba(174,79,230,.30);
+}
+
+.quiz-hotspot.correct{
+    box-shadow:0 0 0 6px rgba(55,190,90,.85);
+    background:rgba(55,190,90,.16);
+}
+
+.quiz-hotspot.wrong{
+    box-shadow:0 0 0 5px rgba(240,70,70,.80);
+    background:rgba(240,70,70,.12);
+    animation:shake .22s linear 2;
+}
+
+.quiz-hotspot:disabled{
+    cursor:default;
+}
+
+@keyframes shake{
+    0%,100%{
+        transform:translateX(0);
+    }
+
+    25%{
+        transform:translateX(-4px);
+    }
+
+    75%{
+        transform:translateX(4px);
+    }
+}
+
+
+/* =========================
+   QUESTION POSITIONS
+   ========================= */
+
+.q1{
+    top:26.5%;
+}
+
+.q2{
+    top:39.7%;
+}
+
+.q3{
+    top:54.7%;
+}
+
+.q4{
+    top:69.3%;
+}
+
+.q5{
+    top:83.3%;
+}
+
+
+/* =========================
+   ANSWER POSITIONS
+   ========================= */
+
+.a1{
+    left:64.5%;
+}
+
+.a2{
+    left:75.3%;
+}
+
+.a3{
+    left:86.1%;
+}
+
+</style>
+</head>
+
+<body>
+
+<main class="booklet">
+
+    <div class="interactive-page">
+
+        <img
+            src="pomi-page-7.png"
+            alt="ABC Quick Quiz"
+            class="page-image"
+        >
+
+
+        <!-- =========================
+             QUESTION 1
+             Which letter comes after F?
+             E | G | H
+             Correct = G
+        ========================= -->
+
+        <button
+            class="quiz-hotspot q1 a1"
+            data-question="1"
+            data-answer="E"
+            aria-label="E"
+            onclick="answer(this)"
+        ></button>
+
+        <button
+            class="quiz-hotspot q1 a2"
+            data-question="1"
+            data-answer="G"
+            aria-label="G"
+            onclick="answer(this)"
+        ></button>
+
+        <button
+            class="quiz-hotspot q1 a3"
+            data-question="1"
+            data-answer="H"
+            aria-label="H"
+            onclick="answer(this)"
+        ></button>
+
+
+        <!-- =========================
+             QUESTION 2
+             Which lowercase letter matches M?
+             n | m | w
+             Correct = m
+        ========================= -->
+
+        <button
+            class="quiz-hotspot q2 a1"
+            data-question="2"
+            data-answer="n"
+            aria-label="n"
+            onclick="answer(this)"
+        ></button>
+
+        <button
+            class="quiz-hotspot q2 a2"
+            data-question="2"
+            data-answer="m"
+            aria-label="m"
+            onclick="answer(this)"
+        ></button>
+
+        <button
+            class="quiz-hotspot q2 a3"
+            data-question="2"
+            data-answer="w"
+            aria-label="w"
+            onclick="answer(this)"
+        ></button>
+
+
+        <!-- =========================
+             QUESTION 3
+             P – Q – ? – S
+             R | T | U
+             Correct = R
+        ========================= -->
+
+        <button
+            class="quiz-hotspot q3 a1"
+            data-question="3"
+            data-answer="R"
+            aria-label="R"
+            onclick="answer(this)"
+        ></button>
+
+        <button
+            class="quiz-hotspot q3 a2"
+            data-question="3"
+            data-answer="T"
+            aria-label="T"
+            onclick="answer(this)"
+        ></button>
+
+        <button
+            class="quiz-hotspot q3 a3"
+            data-question="3"
+            data-answer="U"
+            aria-label="U"
+            onclick="answer(this)"
+        ></button>
+
+
+        <!-- =========================
+             QUESTION 4
+             Which picture starts with B?
+             Apple | Ball | Cat
+             Correct = Ball
+        ========================= -->
+
+        <button
+            class="quiz-hotspot q4 a1"
+            data-question="4"
+            data-answer="Apple"
+            aria-label="Apple"
+            onclick="answer(this)"
+        ></button>
+
+        <button
+            class="quiz-hotspot q4 a2"
+            data-question="4"
+            data-answer="Ball"
+            aria-label="Ball"
+            onclick="answer(this)"
+        ></button>
+
+        <button
+            class="quiz-hotspot q4 a3"
+            data-question="4"
+            data-answer="Cat"
+            aria-label="Cat"
+            onclick="answer(this)"
+        ></button>
+
+
+        <!-- =========================
+             QUESTION 5
+             Which letter comes before Y?
+             W | X | Z
+             Correct = X
+        ========================= -->
+
+        <button
+            class="quiz-hotspot q5 a1"
+            data-question="5"
+            data-answer="W"
+            aria-label="W"
+            onclick="answer(this)"
+        ></button>
+
+        <button
+            class="quiz-hotspot q5 a2"
+            data-question="5"
+            data-answer="X"
+            aria-label="X"
+            onclick="answer(this)"
+        ></button>
+
+        <button
+            class="quiz-hotspot q5 a3"
+            data-question="5"
+            data-answer="Z"
+            aria-label="Z"
+            onclick="answer(this)"
+        ></button>
+
+    </div>
+
+
+    <!-- =========================
+         SCORE AND NAVIGATION
+    ========================= -->
+
+    <section class="controls">
+
+        <div class="score" id="score">
+            0 / 5 correct
+        </div>
+
+        <div class="message" id="message"></div>
+
+
+        <!-- ONLY ONE NEXT BUTTON -->
+        <!-- Appears after all 5 questions are correct -->
+
+        <a
+            id="next"
+            class="navbtn next"
+            href="pomi-page-8.html"
+            style="display:none;"
+        >
+            NEXT →
+        </a>
+
+
+        <!-- =========================
+             FOOTER NAVIGATION
+             BACK + HOME ONLY
+        ========================= -->
+
+        <div class="footer-nav">
+
+            <a
+                class="navbtn"
+                href="pomi-page-6.html"
+            >
+                ← BACK
+            </a>
+
+            <a
+                class="navbtn"
+                href="index.html"
+            >
+                🏠 HOME
+            </a>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- =========================
+     GAME JAVASCRIPT
+========================= -->
+
+<script>
+
+let score = 0;
+
+const completed = {};
+
+
+/* =========================
+   CORRECT ANSWERS
+========================= */
+
+const correctAnswers = {
+
+    1: "G",
+    2: "m",
+    3: "R",
+    4: "Ball",
+    5: "X"
+
+};
+
+
+/* =========================
+   ANSWER FUNCTION
+========================= */
+
+function answer(button){
+
+    const question = button.dataset.question;
+    const selectedAnswer = button.dataset.answer;
+
+
+    /* Prevent answering a completed question */
+    if(completed[question]){
+        return;
+    }
+
+
+    /* =========================
+       CORRECT ANSWER
+    ========================= */
+
+    if(selectedAnswer === correctAnswers[question]){
+
+        button.classList.add("correct");
+
+        button.disabled = true;
+
+        completed[question] = true;
+
+        score++;
+
+
+        /* Update score */
+
+        document.getElementById("score").textContent =
+            score + " / 5 correct";
+
+
+        /* Show message */
+
+        document.getElementById("message").textContent =
+            "⭐ Great job!";
+
+
+        /* =========================
+           ALL FIVE COMPLETED
+        ========================= */
+
+        if(score === 5){
+
+            markPomiDone(7);
+
+            document.getElementById("message").textContent =
+                "🏆 Excellent! You completed the ABC Quick Quiz!";
+
+
+            /* Show the ONLY NEXT button */
+
+            document.getElementById("next").style.display =
+                "inline-block";
+        }
+
+    }
+
+
+    /* =========================
+       WRONG ANSWER
+    ========================= */
+
+    else{
+
+        button.classList.add("wrong");
+
+        document.getElementById("message").textContent =
+            "😊 Try again! Think carefully.";
+
+
+        setTimeout(function(){
+
+            button.classList.remove("wrong");
+
+        },450);
+
+    }
+
+}
+
+</script>
+
+
+<script src="app.js"></script>
+
+</body>
+</html>

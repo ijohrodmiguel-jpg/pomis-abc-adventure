@@ -1,16 +1,150 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Parent Activity Guide</title><link rel="stylesheet" href="style.css"></head>
-<body><main class="booklet"><img src="pomi-page-8.png" alt="Parent Activity Guide" class="page-image">
-<section class="controls"><h2>🏠 Parent Activity Guide</h2>
-<p>Use these simple steps to support your child's ABC learning.</p>
-<div class="grid">
-<div class="activity-card"><h3>🐱 1. Read Together</h3><p>Read the ABC Story and encourage your child to say letters A–E aloud.</p></div>
-<div class="activity-card"><h3>🔎 2. Explore</h3><p>Let your child tap or click the letters, pictures, and answers.</p></div>
-<div class="activity-card"><h3>💬 3. Ask & Encourage</h3><p>Ask your child to name the letters and pictures. Praise their effort.</p></div>
-<div class="activity-card"><h3>⭐ 4. Practice Again</h3><p>Repeat activities to strengthen letter recognition and ABC order.</p></div>
-</div>
-<a class="navbtn" href="pomi-page-7.html">← BACK TO QUIZ</a>
-<a class="navbtn" href="pomi-page-9.html">FINISH ADVENTURE ⭐</a><div class="footer-nav"><a class="navbtn" href="pomi-page-7.html">← BACK</a><a class="navbtn" href="pomi-page-9.html">NEXT →</a><a class="navbtn" href="index.html">🏠 HOME</a></div></section></main>
-<script></script><script src="app.js"></script></body></html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Parent Activity Guide</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+.page8-wrap {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 0 15px 30px;
+    box-sizing: border-box;
+}
+
+.page8-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.page8-controls {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.page8-btn {
+    display: inline-block;
+    text-decoration: none;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 22px;
+    margin: 6px;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    background: #f7c1aa;
+    color: #8d35d6;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.page8-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+}
+
+.page8-next {
+    background: #c75ce8;
+    color: white;
+}
+
+.page8-message {
+    margin: 12px 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #c75ce8;
+}
+
+@media (max-width: 600px) {
+
+    .page8-wrap {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .page8-controls {
+        margin-top: 18px;
+    }
+
+    .page8-btn {
+        font-size: 14px;
+        padding: 10px 16px;
+        margin: 4px;
+    }
+
+    .page8-message {
+        font-size: 14px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<main class="booklet">
+
+    <div class="page8-wrap">
+
+        <!-- PARENT ACTIVITY GUIDE IMAGE -->
+        <img
+            src="pomi-page-8.png"
+            alt="Parent Activity Guide"
+            class="page8-image"
+        >
+
+        <!-- NAVIGATION -->
+        <section class="page8-controls">
+
+            <div class="page8-message">
+                🏠 You made it to the Parent Activity Guide!
+            </div>
+
+            <a
+                href="pomi-page-7.html"
+                class="page8-btn"
+            >
+                ← BACK TO QUIZ
+            </a>
+
+            <a
+                href="pomi-page-9.html"
+                class="page8-btn page8-next"
+                onclick="markPomiDone(8)"
+            >
+                NEXT →
+            </a>
+
+            <br>
+
+            <a
+                href="pomi-page-7.html"
+                class="page8-btn"
+            >
+                ← BACK
+            </a>
+
+            <a
+                href="index.html"
+                class="page8-btn"
+            >
+                🏠 HOME
+            </a>
+
+        </section>
+
+    </div>
+
+</main>
+
+<script src="app.js"></script>
+
+</body>
+</html>

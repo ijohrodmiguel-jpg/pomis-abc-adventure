@@ -1,25 +1,289 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Pomi's ABC Achievement</title><link rel="stylesheet" href="style.css"></head>
-<body><main class="booklet"><img src="pomi-page-9.png" alt="Pomi's ABC Achievement" class="page-image">
-<section class="controls"><div class="certificate">
-<h2>🏆 Pomi's ABC Achievement</h2>
-<p><strong>Great job, ABC Explorer! 🐱💜</strong></p>
-<p>You explored the alphabet, matched letters and pictures, and completed fun ABC activities with Pomi!</p>
-<h2>🎉 ABC EXPLORER 🎉</h2>
-<p>I can recognize letters A–Z!</p>
-<p>I can match uppercase and lowercase letters!</p>
-<p>I can find letters in words and pictures!</p>
-<label>Name: <input id="name" type="text" placeholder="Your name"></label>
-<br><br>
-<label>Date: <input id="date" type="date"></label>
-<br><br>
-<button onclick="showAchievement()">CELEBRATE! 🎉</button>
-<div class="message" id="message"></div>
-</div>
-<a class="navbtn" href="index.html">🏠 BACK TO COVER</a><div class="footer-nav"><a class="navbtn" href="pomi-page-8.html">← BACK</a><a class="navbtn" href="index.html">🏠 HOME</a></div></section></main>
-<script>function showAchievement(){
- const n=document.getElementById('name').value.trim()||'ABC Explorer';
- document.getElementById('message').textContent='🎉 Congratulations, '+n+'! Pomi is proud of you! 💜🐱';
-}</script><script src="app.js"></script></body></html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Pomi's ABC Achievement</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+/* PAGE 9 - FINAL ACHIEVEMENT */
+
+.page9-wrap {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 15px 35px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.page9-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Personalization area */
+.achievement-form {
+    max-width: 520px;
+    margin: 25px auto 0;
+    padding: 20px;
+    border: 2px dashed #c75ce8;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.45);
+    box-sizing: border-box;
+}
+
+.achievement-form h2 {
+    margin: 0 0 8px;
+    color: #c75ce8;
+    font-size: 22px;
+}
+
+.achievement-form p {
+    margin: 0 0 15px;
+    color: #c75ce8;
+    font-weight: bold;
+}
+
+.achievement-form label {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    color: #8d35d6;
+    font-weight: bold;
+}
+
+.achievement-form input {
+    width: 100%;
+    max-width: 350px;
+    padding: 10px;
+    border: 2px solid #f7c1aa;
+    border-radius: 10px;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 16px;
+    text-align: center;
+    outline: none;
+}
+
+.achievement-form input:focus {
+    border-color: #c75ce8;
+}
+
+.save-btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 11px 20px;
+    border: none;
+    border-radius: 12px;
+    background: #c75ce8;
+    color: white;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.save-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* Navigation */
+.page9-controls {
+    margin-top: 22px;
+    text-align: center;
+}
+
+.page9-btn {
+    display: inline-block;
+    text-decoration: none;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 22px;
+    margin: 5px;
+    background: #f7c1aa;
+    color: #8d35d6;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.page9-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+}
+
+.finish-btn {
+    background: #c75ce8;
+    color: white;
+}
+
+.success-message {
+    margin: 12px 0;
+    color: #c75ce8;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+@media (max-width: 600px) {
+
+    .page9-wrap {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .achievement-form {
+        padding: 15px;
+        margin-top: 18px;
+    }
+
+    .achievement-form h2 {
+        font-size: 19px;
+    }
+
+    .page9-btn {
+        font-size: 14px;
+        padding: 10px 16px;
+    }
+
+    .success-message {
+        font-size: 14px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<main class="booklet">
+
+    <div class="page9-wrap">
+
+        <!-- ORIGINAL ACHIEVEMENT PAGE -->
+        <img
+            src="pomi-page-9.png"
+            alt="Pomi's ABC Achievement"
+            class="page9-image"
+        >
+
+        <!-- PERSONALIZATION -->
+        <section class="achievement-form">
+
+            <h2>🏆 Make Your Achievement Yours!</h2>
+
+            <p>Enter your name and the date you finished.</p>
+
+            <label for="childName">Name</label>
+
+            <input
+                type="text"
+                id="childName"
+                placeholder="Your name"
+            >
+
+            <label for="achievementDate">Date</label>
+
+            <input
+                type="date"
+                id="achievementDate"
+            >
+
+            <br>
+
+            <button
+                class="save-btn"
+                onclick="saveAchievement()"
+            >
+                🎉 SAVE ACHIEVEMENT
+            </button>
+
+            <div
+                id="savedMessage"
+                class="success-message"
+            ></div>
+
+        </section>
+
+        <!-- FINAL NAVIGATION -->
+        <section class="page9-controls">
+
+            <a
+                href="index.html"
+                class="page9-btn finish-btn"
+                onclick="finishAdventure()"
+            >
+                🎉 FINISH ADVENTURE
+            </a>
+
+            <br>
+
+            <a
+                href="index.html"
+                class="page9-btn"
+            >
+                ← BACK TO COVER
+            </a>
+
+            <a
+                href="pomi-page-8.html"
+                class="page9-btn"
+            >
+                ← BACK
+            </a>
+
+            <a
+                href="index.html"
+                class="page9-btn"
+            >
+                🏠 HOME
+            </a>
+
+        </section>
+
+    </div>
+
+</main>
+
+<script src="app.js"></script>
+
+<script>
+function saveAchievement() {
+
+    const name = document.getElementById("childName").value.trim();
+    const date = document.getElementById("achievementDate").value;
+
+    if (!name) {
+        document.getElementById("savedMessage").textContent =
+            "😊 Please enter your name first.";
+        return;
+    }
+
+    document.getElementById("savedMessage").textContent =
+        "🎉 Great job, " + name + "! Your ABC Achievement is complete!";
+
+    try {
+        localStorage.setItem("pomiAchievementName", name);
+        localStorage.setItem("pomiAchievementDate", date);
+    } catch (e) {
+        // Continue normally if storage is unavailable
+    }
+}
+
+function finishAdventure() {
+
+    try {
+        markPomiDone(9);
+    } catch (e) {
+        // Continue to Home even if progress tracking is unavailable
+    }
+}
+</script>
+
+</body>
+</html>

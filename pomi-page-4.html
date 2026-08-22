@@ -1,33 +1,376 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Uppercase and Lowercase Match</title><link rel="stylesheet" href="style.css"></head>
-<body><main class="booklet"><img src="pomi-page-4.png" alt="Uppercase and Lowercase Match" class="page-image">
-<section class="controls"><h2>🧩 Uppercase & Lowercase Match</h2>
-<p>Click an uppercase letter, then click its lowercase partner.</p>
-<div class="match-wrap">
-<div class="match-col"><h3>UPPERCASE</h3>
-<button class="choice match-btn" data-letter="A" onclick="chooseUpper(this)">A</button>
-<button class="choice match-btn" data-letter="B" onclick="chooseUpper(this)">B</button>
-<button class="choice match-btn" data-letter="C" onclick="chooseUpper(this)">C</button>
-<button class="choice match-btn" data-letter="D" onclick="chooseUpper(this)">D</button>
-<button class="choice match-btn" data-letter="E" onclick="chooseUpper(this)">E</button>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Uppercase and Lowercase Match</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+.interactive-page{
+  position:relative;
+  width:100%;
+  line-height:0;
+  touch-action:manipulation;
+}
+
+.interactive-page .page-image{
+  width:100%;
+  height:auto;
+  display:block;
+}
+
+/* Clickable letter areas */
+.match-hotspot{
+  position:absolute;
+  width:8.6%;
+  aspect-ratio:1;
+  padding:0;
+  border:0;
+  border-radius:18%;
+  background:transparent;
+  color:transparent;
+  cursor:pointer;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+}
+
+/* Optional hover effect */
+.match-hotspot:hover{
+  box-shadow:0 0 0 4px rgba(174,79,230,.28);
+}
+
+/* Selected uppercase letter */
+.match-hotspot.selected{
+  box-shadow:0 0 0 5px rgba(174,79,230,.75);
+  background:rgba(174,79,230,.12);
+}
+
+/* Correct match */
+.match-hotspot.correct{
+  box-shadow:0 0 0 6px rgba(55,190,90,.85);
+  background:rgba(55,190,90,.16);
+}
+
+/* Wrong answer */
+.match-hotspot.wrong{
+  box-shadow:0 0 0 5px rgba(240,70,70,.8);
+  background:rgba(240,70,70,.12);
+  animation:shake .22s linear 2;
+}
+
+.match-hotspot:disabled{
+  cursor:default;
+}
+
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  25%{transform:translateX(-4px)}
+  75%{transform:translateX(4px)}
+}
+
+/* Uppercase positions */
+.upper-a{top:37.7%;left:20.4%}
+.upper-b{top:47.0%;left:20.4%}
+.upper-c{top:56.0%;left:20.4%}
+.upper-d{top:65.2%;left:20.4%}
+.upper-e{top:74.3%;left:20.4%}
+
+/* Lowercase positions */
+.lower-c{top:37.7%;left:70.5%}
+.lower-a{top:47.0%;left:70.5%}
+.lower-e{top:56.0%;left:70.5%}
+.lower-b{top:65.2%;left:70.5%}
+.lower-d{top:74.3%;left:70.5%}
+</style>
+</head>
+
+<body>
+
+<main class="booklet">
+
+<div class="interactive-page">
+
+<img
+  src="pomi-page-4.png"
+  alt="Uppercase and Lowercase Match"
+  class="page-image"
+>
+
+<!-- =========================
+     UPPERCASE LETTERS
+========================= -->
+
+<button
+  class="match-hotspot upper-a"
+  data-letter="A"
+  aria-label="Uppercase A"
+  onclick="chooseUpper(this)">
+</button>
+
+<button
+  class="match-hotspot upper-b"
+  data-letter="B"
+  aria-label="Uppercase B"
+  onclick="chooseUpper(this)">
+</button>
+
+<button
+  class="match-hotspot upper-c"
+  data-letter="C"
+  aria-label="Uppercase C"
+  onclick="chooseUpper(this)">
+</button>
+
+<button
+  class="match-hotspot upper-d"
+  data-letter="D"
+  aria-label="Uppercase D"
+  onclick="chooseUpper(this)">
+</button>
+
+<button
+  class="match-hotspot upper-e"
+  data-letter="E"
+  aria-label="Uppercase E"
+  onclick="chooseUpper(this)">
+</button>
+
+
+<!-- =========================
+     LOWERCASE LETTERS
+========================= -->
+
+<button
+  class="match-hotspot lower-c"
+  data-letter="c"
+  aria-label="Lowercase c"
+  onclick="chooseLower(this)">
+</button>
+
+<button
+  class="match-hotspot lower-a"
+  data-letter="a"
+  aria-label="Lowercase a"
+  onclick="chooseLower(this)">
+</button>
+
+<button
+  class="match-hotspot lower-e"
+  data-letter="e"
+  aria-label="Lowercase e"
+  onclick="chooseLower(this)">
+</button>
+
+<button
+  class="match-hotspot lower-b"
+  data-letter="b"
+  aria-label="Lowercase b"
+  onclick="chooseLower(this)">
+</button>
+
+<button
+  class="match-hotspot lower-d"
+  data-letter="d"
+  aria-label="Lowercase d"
+  onclick="chooseLower(this)">
+</button>
+
 </div>
-<div class="match-col"><h3>LOWERCASE</h3>
-<button class="choice match-btn" data-letter="c" onclick="chooseLower(this)">c</button>
-<button class="choice match-btn" data-letter="a" onclick="chooseLower(this)">a</button>
-<button class="choice match-btn" data-letter="e" onclick="chooseLower(this)">e</button>
-<button class="choice match-btn" data-letter="b" onclick="chooseLower(this)">b</button>
-<button class="choice match-btn" data-letter="d" onclick="chooseLower(this)">d</button>
-</div></div>
-<div class="score" id="score">0 / 5 matched</div><div class="message" id="message"></div>
-<a id="next" class="navbtn next" href="pomi-page-5.html">NEXT →</a><div class="footer-nav"><a class="navbtn" href="pomi-page-3.html">← BACK</a><a class="navbtn" href="pomi-page-5.html">NEXT →</a><a class="navbtn" href="index.html">🏠 HOME</a></div></section></main>
-<script>let selected=null,matched=0;
-function chooseUpper(b){if(b.classList.contains('matched'))return;selected=b;document.querySelectorAll('.match-btn').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');}
-function chooseLower(b){
- if(!selected||b.classList.contains('matched'))return;
- const ok=b.dataset.letter===selected.dataset.letter.toLowerCase();
- if(ok){selected.classList.add('matched');b.classList.add('matched');matched++;document.getElementById('score').textContent=matched+' / 5 matched';selected=null;
-   if(matched===5){markPomiDone(4);document.getElementById('message').textContent='🎉 Perfect! All uppercase and lowercase letters match!';document.getElementById('next').style.display='inline-block';}
- }else{document.getElementById('message').textContent='😊 Not a match. Try another lowercase letter.';}
-}</script><script src="app.js"></script></body></html>
+
+
+<!-- =========================
+     SCORE AND CONTROLS
+========================= -->
+
+<section class="controls">
+
+<div class="score" id="score">
+0 / 5 matched
+</div>
+
+<div class="message" id="message"></div>
+
+
+<!--
+     ONE NEXT BUTTON ONLY
+     It appears after all five matches
+-->
+
+<a
+  id="next"
+  class="navbtn next"
+  href="pomi-page-5.html"
+>
+NEXT →
+</a>
+
+
+<!-- =========================
+     BOTTOM NAVIGATION
+========================= -->
+
+<div class="footer-nav">
+
+<a
+  class="navbtn"
+  href="pomi-page-3.html"
+>
+← BACK
+</a>
+
+<a
+  class="navbtn"
+  href="index.html"
+>
+🏠 HOME
+</a>
+
+</div>
+
+</section>
+
+</main>
+
+
+<!-- =========================
+     GAME JAVASCRIPT
+========================= -->
+
+<script>
+
+let selected = null;
+let matched = 0;
+
+
+/* =========================
+   SELECT UPPERCASE LETTER
+========================= */
+
+function chooseUpper(button){
+
+  if(button.classList.contains('correct')){
+    return;
+  }
+
+  /* Remove previous selection */
+  document
+    .querySelectorAll('.match-hotspot')
+    .forEach(function(item){
+      item.classList.remove('selected');
+    });
+
+  selected = button;
+
+  button.classList.add('selected');
+
+  document.getElementById('message').textContent =
+    'Now find its lowercase partner. 😊';
+}
+
+
+/* =========================
+   SELECT LOWERCASE LETTER
+========================= */
+
+function chooseLower(button){
+
+  /* If no uppercase letter was selected */
+  if(!selected){
+
+    document.getElementById('message').textContent =
+      '👆 First tap an uppercase letter.';
+
+    return;
+  }
+
+  /* Don't allow already matched letters */
+  if(button.classList.contains('correct')){
+    return;
+  }
+
+
+  const upperLetter = selected.dataset.letter;
+  const lowerLetter = button.dataset.letter;
+
+
+  /* =========================
+     CORRECT MATCH
+  ========================= */
+
+  if(lowerLetter === upperLetter.toLowerCase()){
+
+    selected.classList.remove('selected');
+    selected.classList.add('correct');
+
+    button.classList.add('correct');
+
+    selected.disabled = true;
+    button.disabled = true;
+
+    matched++;
+
+
+    /* Update score */
+
+    document.getElementById('score').textContent =
+      matched + ' / 5 matched';
+
+
+    document.getElementById('message').textContent =
+      '🎉 Great job! That is a match!';
+
+
+    selected = null;
+
+
+    /* =========================
+       ALL FIVE MATCHES COMPLETE
+    ========================= */
+
+    if(matched === 5){
+
+      markPomiDone(4);
+
+      document.getElementById('message').textContent =
+        '🎉 Perfect! You matched all five letters!';
+
+
+      /*
+         Show the ONE NEXT button
+         after completing the activity.
+      */
+
+      document.getElementById('next').style.display =
+        'inline-block';
+    }
+
+  }
+
+
+  /* =========================
+     WRONG MATCH
+  ========================= */
+
+  else{
+
+    button.classList.add('wrong');
+
+    document.getElementById('message').textContent =
+      '😊 Not a match. Try again!';
+
+    setTimeout(function(){
+
+      button.classList.remove('wrong');
+
+    },450);
+  }
+}
+
+</script>
+
+
+<script src="app.js"></script>
+
+</body>
+</html>

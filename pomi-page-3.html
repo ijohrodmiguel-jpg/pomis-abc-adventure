@@ -1,14 +1,438 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Find the Letter</title><link rel="stylesheet" href="style.css"></head>
-<body><main class="booklet"><img src="pomi-page-3.png" alt="Find the Letter" class="page-image">
-<section class="controls"><h2>🔎 Find the Letter!</h2><p>Tap the letter that matches the one shown.</p><div id="findArea"><div class="activity-card"><h3>Find: A</h3><div class="grid"><button class="choice" data-target="A" data-letter="E" onclick="pick(this)">E</button><button class="choice" data-target="A" data-letter="Q" onclick="pick(this)">Q</button><button class="choice" data-target="A" data-letter="G" onclick="pick(this)">G</button><button class="choice" data-target="A" data-letter="A" onclick="pick(this)">A</button><button class="choice" data-target="A" data-letter="R" onclick="pick(this)">R</button></div></div><div class="activity-card"><h3>Find: B</h3><div class="grid"><button class="choice" data-target="B" data-letter="D" onclick="pick(this)">D</button><button class="choice" data-target="B" data-letter="B" onclick="pick(this)">B</button><button class="choice" data-target="B" data-letter="P" onclick="pick(this)">P</button><button class="choice" data-target="B" data-letter="M" onclick="pick(this)">M</button><button class="choice" data-target="B" data-letter="G" onclick="pick(this)">G</button></div></div><div class="activity-card"><h3>Find: C</h3><div class="grid"><button class="choice" data-target="C" data-letter="K" onclick="pick(this)">K</button><button class="choice" data-target="C" data-letter="X" onclick="pick(this)">X</button><button class="choice" data-target="C" data-letter="C" onclick="pick(this)">C</button><button class="choice" data-target="C" data-letter="N" onclick="pick(this)">N</button><button class="choice" data-target="C" data-letter="Z" onclick="pick(this)">Z</button></div></div><div class="activity-card"><h3>Find: D</h3><div class="grid"><button class="choice" data-target="D" data-letter="P" onclick="pick(this)">P</button><button class="choice" data-target="D" data-letter="D" onclick="pick(this)">D</button><button class="choice" data-target="D" data-letter="Q" onclick="pick(this)">Q</button><button class="choice" data-target="D" data-letter="T" onclick="pick(this)">T</button><button class="choice" data-target="D" data-letter="S" onclick="pick(this)">S</button></div></div><div class="activity-card"><h3>Find: E</h3><div class="grid"><button class="choice" data-target="E" data-letter="F" onclick="pick(this)">F</button><button class="choice" data-target="E" data-letter="Y" onclick="pick(this)">Y</button><button class="choice" data-target="E" data-letter="L" onclick="pick(this)">L</button><button class="choice" data-target="E" data-letter="E" onclick="pick(this)">E</button><button class="choice" data-target="E" data-letter="J" onclick="pick(this)">J</button></div></div></div><div class="score" id="score">0 / 5 correct</div><div class="message" id="message"></div><a id="next" class="navbtn next" href="pomi-page-4.html">NEXT →</a><div class="footer-nav"><a class="navbtn" href="pomi-page-2.html">← BACK</a><a class="navbtn" href="pomi-page-4.html">NEXT →</a><a class="navbtn" href="index.html">🏠 HOME</a></div></section></main>
-<script>let found=0;
-function pick(b){
- if(b.classList.contains('correct'))return;
- const ok=b.dataset.letter===b.dataset.target;
- if(ok){b.classList.add('correct');b.disabled=true;found++;document.getElementById('score').textContent=found+' / 5 correct';
-   if(found===5){markPomiDone(3);document.getElementById('message').textContent='🎉 Excellent! You found all five letters!';document.getElementById('next').style.display='inline-block';}
- }else{b.classList.add('wrong');document.getElementById('message').textContent='😊 Try again! Find the matching letter.';setTimeout(()=>b.classList.remove('wrong'),300);}
-}</script><script src="app.js"></script></body></html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find the Letter</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+.interactive-page{
+    position:relative;
+    width:100%;
+    line-height:0;
+    touch-action:manipulation;
+}
+
+.interactive-page .page-image{
+    width:100%;
+    height:auto;
+    display:block;
+}
+
+/* Invisible clickable areas */
+.letter-hotspot{
+    position:absolute;
+    width:8.6%;
+    aspect-ratio:1;
+    padding:0;
+    border:0;
+    border-radius:18%;
+    background:transparent;
+    color:transparent;
+    cursor:pointer;
+    touch-action:manipulation;
+    -webkit-tap-highlight-color:transparent;
+}
+
+.letter-hotspot:hover{
+    box-shadow:0 0 0 4px rgba(174,79,230,.28);
+}
+
+.letter-hotspot.correct{
+    box-shadow:0 0 0 6px rgba(55,190,90,.85);
+    background:rgba(55,190,90,.16);
+}
+
+.letter-hotspot.wrong{
+    box-shadow:0 0 0 5px rgba(240,70,70,.8);
+    background:rgba(240,70,70,.12);
+    animation:shake .22s linear 2;
+}
+
+.letter-hotspot:disabled{
+    cursor:default;
+}
+
+@keyframes shake{
+    0%,100%{
+        transform:translateX(0);
+    }
+    25%{
+        transform:translateX(-4px);
+    }
+    75%{
+        transform:translateX(4px);
+    }
+}
+
+/* Row positions */
+.find-a{top:27.2%;}
+.find-b{top:41.7%;}
+.find-c{top:55.9%;}
+.find-d{top:70.2%;}
+.find-e{top:84.4%;}
+
+/* Column positions */
+.p1{left:10%;}
+.p2{left:26.7%;}
+.p3{left:43.5%;}
+.p4{left:60.2%;}
+.p5{left:77%;}
+</style>
+</head>
+
+<body>
+
+<main class="booklet">
+
+<div class="interactive-page">
+
+<img 
+    src="pomi-page-3.png" 
+    alt="Find the Letter" 
+    class="page-image"
+>
+
+<!-- =========================
+     FIND A: E Q G A R
+     Correct answer: A
+========================= -->
+
+<button 
+    class="letter-hotspot find-a p1"
+    data-target="A"
+    data-letter="E"
+    aria-label="E"
+    onclick="pick(this)">
+</button>
+
+<button 
+    class="letter-hotspot find-a p2"
+    data-target="A"
+    data-letter="Q"
+    aria-label="Q"
+    onclick="pick(this)">
+</button>
+
+<button 
+    class="letter-hotspot find-a p3"
+    data-target="A"
+    data-letter="G"
+    aria-label="G"
+    onclick="pick(this)">
+</button>
+
+<button 
+    class="letter-hotspot find-a p4"
+    data-target="A"
+    data-letter="A"
+    aria-label="A"
+    onclick="pick(this)">
+</button>
+
+<button 
+    class="letter-hotspot find-a p5"
+    data-target="A"
+    data-letter="R"
+    aria-label="R"
+    onclick="pick(this)">
+</button>
+
+
+<!-- =========================
+     FIND B: D B P M G
+     Correct answer: B
+========================= -->
+
+<button 
+    class="letter-hotspot find-b p1"
+    data-target="B"
+    data-letter="D"
+    aria-label="D"
+    onclick="pick(this)">
+</button>
+
+<button 
+    class="letter-hotspot find-b p2"
+    data-target="B"
+    data-letter="B"
+    aria-label="B"
+    onclick="pick(this)">
+</button>
+
+<button 
+    class="letter-hotspot find-b p3"
+    data-target="B"
+    data-letter="P"
+    aria-label="P"
+    onclick="pick(this)">
+</button>
+
+<button 
+    class="letter-hotspot find-b p4"
+    data-target="B"
+    data-letter="M"
+    aria-label="M"
+    onclick="pick(this)">
+</button>
+
+<button 
+    class="letter-hotspot find-b p5"
+    data-target="B"
+    data-letter="G"
+    aria-label="G"
+    onclick="pick(this)">
+</button>
+
+
+<!-- =========================
+     FIND C: K X C N Z
+     Correct answer: C
+========================= -->
+
+<button 
+    class="letter-hotspot find-c p1"
+    data-target="C"
+    data-letter="K"
+    aria-label="K"
+    onclick="pick(this)">
+</button>
+
+<button 
+    class="letter-hotspot find-c p2"
+    data-target="C"
+    data-letter="X"
+    aria-label="X"
+    onclick="pick(this)">
+</button>
+
+<button 
+    class="letter-hotspot find-c p3"
+    data-target="C"
+    data-letter="C"
+    aria-label="C"
+    onclick="pick(this)">
+</button>
+
+<button 
+    class="letter-hotspot find-c p4"
+    data-target="C"
+    data-letter="N"
+    aria-label="N"
+    onclick="pick(this)">
+</button>
+
+<button 
+    class="letter-hotspot find-c p5"
+    data-target="C"
+    data-letter="Z"
+    aria-label="Z"
+    onclick="pick(this)">
+</button>
+
+
+<!-- =========================
+     FIND D: P D Q T S
+     Correct answer: D
+========================= -->
+
+<button 
+    class="letter-hotspot find-d p1"
+    data-target="D"
+    data-letter="P"
+    aria-label="P"
+    onclick="pick(this)">
+</button>
+
+<button 
+    class="letter-hotspot find-d p2"
+    data-target="D"
+    data-letter="D"
+    aria-label="D"
+    onclick="pick(this)">
+</button>
+
+<button 
+    class="letter-hotspot find-d p3"
+    data-target="D"
+    data-letter="Q"
+    aria-label="Q"
+    onclick="pick(this)">
+</button>
+
+<button 
+    class="letter-hotspot find-d p4"
+    data-target="D"
+    data-letter="T"
+    aria-label="T"
+    onclick="pick(this)">
+</button>
+
+<button 
+    class="letter-hotspot find-d p5"
+    data-target="D"
+    data-letter="S"
+    aria-label="S"
+    onclick="pick(this)">
+</button>
+
+
+<!-- =========================
+     FIND E: F Y L E J
+     Correct answer: E
+========================= -->
+
+<button 
+    class="letter-hotspot find-e p1"
+    data-target="E"
+    data-letter="F"
+    aria-label="F"
+    onclick="pick(this)">
+</button>
+
+<button 
+    class="letter-hotspot find-e p2"
+    data-target="E"
+    data-letter="Y"
+    aria-label="Y"
+    onclick="pick(this)">
+</button>
+
+<button 
+    class="letter-hotspot find-e p3"
+    data-target="E"
+    data-letter="L"
+    aria-label="L"
+    onclick="pick(this)">
+</button>
+
+<button 
+    class="letter-hotspot find-e p4"
+    data-target="E"
+    data-letter="E"
+    aria-label="E"
+    onclick="pick(this)">
+</button>
+
+<button 
+    class="letter-hotspot find-e p5"
+    data-target="E"
+    data-letter="J"
+    aria-label="J"
+    onclick="pick(this)">
+</button>
+
+</div>
+
+
+<!-- =========================
+     SCORE AND CONTROLS
+========================= -->
+
+<section class="controls">
+
+<div class="score" id="score">
+    0 / 5 correct
+</div>
+
+<div class="message" id="message"></div>
+
+
+<!-- ONE NEXT BUTTON ONLY -->
+<a 
+    id="next" 
+    class="navbtn next" 
+    href="pomi-page-4.html"
+    style="display:none;">
+    NEXT →
+</a>
+
+
+<!-- BACK AND HOME ONLY -->
+<div class="footer-nav">
+
+<a 
+    class="navbtn" 
+    href="pomi-page-2.html">
+    ← BACK
+</a>
+
+<a 
+    class="navbtn" 
+    href="index.html">
+    🏠 HOME
+</a>
+
+</div>
+
+</section>
+
+</main>
+
+
+<!-- =========================
+     GAME JAVASCRIPT
+========================= -->
+
+<script>
+
+let found = 0;
+
+function pick(button){
+
+    /* Prevent clicking an already-correct answer */
+    if(button.disabled){
+        return;
+    }
+
+    /* Check the selected letter */
+    if(button.dataset.letter === button.dataset.target){
+
+        /* Correct answer */
+        button.classList.add('correct');
+        button.disabled = true;
+
+        found++;
+
+        /* Update score */
+        document.getElementById('score').textContent =
+            found + ' / 5 correct';
+
+        /* Show success message */
+        document.getElementById('message').textContent =
+            '🎉 Correct! Great job!';
+
+        /* When all five are completed */
+        if(found === 5){
+
+            markPomiDone(3);
+
+            document.getElementById('message').textContent =
+                '🎉 Excellent! You found all five letters!';
+
+            /* Show the ONE NEXT button */
+            document.getElementById('next').style.display =
+                'inline-block';
+        }
+
+    }else{
+
+        /* Wrong answer */
+        button.classList.add('wrong');
+
+        document.getElementById('message').textContent =
+            '😊 Try again! Find the matching letter.';
+
+        setTimeout(function(){
+            button.classList.remove('wrong');
+        },450);
+    }
+}
+
+</script>
+
+<script src="app.js"></script>
+
+</body>
+</html>

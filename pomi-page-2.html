@@ -1,17 +1,124 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Pomi's ABC Story</title><link rel="stylesheet" href="style.css"></head>
-<body><main class="booklet"><img src="pomi-page-2.png" alt="Pomi's ABC Story" class="page-image">
-<section class="controls"><h2>📖 Story Time with Pomi</h2>
-<p>Read the story on the page above. Try to spot the letters A–E.</p>
-<div class="timer" id="timer">1:00</div>
-<button onclick="startTimer()">START READING TIMER</button>
-<div class="message" id="message"></div>
-<a class="navbtn" href="pomi-page-3.html">NEXT →</a><div class="footer-nav"><a class="navbtn" href="pomi-page-1.html">← BACK</a><a class="navbtn" href="pomi-page-3.html">NEXT →</a><a class="navbtn" href="index.html">🏠 HOME</a></div></section></main>
-<script>let left=60,run=false,t;
-function startTimer(){
- if(run)return; run=true; left=60; document.getElementById('message').textContent='';
- t=setInterval(()=>{left--; let s=left%60; document.getElementById('timer').textContent=Math.floor(left/60)+':'+String(s).padStart(2,'0');
- if(left<=0){clearInterval(t);run=false;markPomiDone(2);document.getElementById('message').textContent='🎉 Great job, little reader!'}} ,1000);
-}</script><script src="app.js"></script></body></html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Story Time with Pomi</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<main class="booklet">
+
+  <!-- PAGE IMAGE -->
+  <img 
+    src="pomi-page-2.png" 
+    alt="Story Time with Pomi" 
+    class="page-image"
+  >
+
+  <!-- INTERACTIVE SECTION -->
+  <section class="controls">
+
+    <h2>📖 Story Time with Pomi</h2>
+
+    <p>
+      Read the story on the page above. Try to spot the letters A–E.
+    </p>
+
+    <!-- TIMER -->
+    <div class="score" id="timer">1:00</div>
+
+    <button 
+      id="timerBtn" 
+      class="navbtn"
+      onclick="startReadingTimer()"
+    >
+      START READING TIMER
+    </button>
+
+    <div 
+      class="message" 
+      id="message"
+    ></div>
+
+    <!-- ONLY ONE NEXT BUTTON -->
+    <a 
+      id="next" 
+      class="navbtn next" 
+      href="pomi-page-3.html"
+      style="display:none;"
+    >
+      NEXT →
+    </a>
+
+  </section>
+
+</main>
+
+
+<script>
+let timeLeft = 60;
+let timerRunning = false;
+let timerInterval = null;
+
+function startReadingTimer() {
+
+  if (timerRunning) {
+    return;
+  }
+
+  timerRunning = true;
+
+  const timer = document.getElementById("timer");
+  const button = document.getElementById("timerBtn");
+  const message = document.getElementById("message");
+  const next = document.getElementById("next");
+
+  button.disabled = true;
+  button.textContent = "READING...";
+
+  message.textContent = "📖 Keep reading and look for the letters A–E!";
+
+  timerInterval = setInterval(function() {
+
+    timeLeft--;
+
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+
+    timer.textContent =
+      minutes + ":" + String(seconds).padStart(2, "0");
+
+    if (timeLeft <= 0) {
+
+      clearInterval(timerInterval);
+
+      timerRunning = false;
+
+      timer.textContent = "0:00";
+
+      button.disabled = false;
+      button.textContent = "READING COMPLETE!";
+
+      message.textContent =
+        "🎉 Great job! You finished the reading time!";
+
+      /* Mark Page 2 as completed */
+      if (typeof markPomiDone === "function") {
+        markPomiDone(2);
+      }
+
+      /* Show the ONE NEXT button */
+      next.style.display = "inline-block";
+    }
+
+  }, 1000);
+}
+</script>
+
+<script src="app.js"></script>
+
+</body>
+</html>

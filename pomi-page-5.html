@@ -1,31 +1,408 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Letter and Picture Match</title><link rel="stylesheet" href="style.css"></head>
-<body><main class="booklet"><img src="pomi-page-5.png" alt="Letter and Picture Match" class="page-image">
-<section class="controls"><h2>🍎 Letter & Picture Match</h2>
-<p>Choose the picture that starts with each letter.</p>
-<div id="lp"></div><div class="score" id="score">0 / 5 matched</div><div class="message" id="message"></div>
-<a id="next" class="navbtn next" href="pomi-page-6.html">NEXT →</a><div class="footer-nav"><a class="navbtn" href="pomi-page-4.html">← BACK</a><a class="navbtn" href="pomi-page-6.html">NEXT →</a><a class="navbtn" href="index.html">🏠 HOME</a></div></section></main>
-<script>const data=[
- ['A',['🐶 Dog','🍎 Apple','🐘 Elephant'],'🍎 Apple'],
- ['B',['🐱 Cat','🏀 Ball','🍎 Apple'],'🏀 Ball'],
- ['C',['🐱 Cat','🐘 Elephant','🏀 Ball'],'🐱 Cat'],
- ['D',['🍎 Apple','🐶 Dog','🐘 Elephant'],'🐶 Dog'],
- ['E',['🏀 Ball','🐱 Cat','🐘 Elephant'],'🐘 Elephant']
-];
-let done=0;
-const lp=document.getElementById('lp');
-data.forEach((row,i)=>{
- const box=document.createElement('div');box.className='quiz-q activity-card';
- box.innerHTML='<strong>'+row[0]+' — Choose the picture</strong><div class="grid"></div>';
- const grid=box.querySelector('.grid');
- row[1].forEach(x=>{const b=document.createElement('button');b.className='choice';b.textContent=x;b.onclick=()=>matchPic(b,x,row[2]);grid.appendChild(b)});
- lp.appendChild(box);
-});
-function matchPic(b,x,correct){
- if(b.parentElement.parentElement.dataset.done)return;
- if(x===correct){b.classList.add('correct');b.parentElement.parentElement.dataset.done='1';done++;document.getElementById('score').textContent=done+' / 5 matched';
-   if(done===5){markPomiDone(5);document.getElementById('message').textContent='🎉 Amazing! You matched all the letters and pictures!';document.getElementById('next').style.display='inline-block';}
- }else{b.classList.add('wrong');document.getElementById('message').textContent='😊 Try again! Think about the first sound of the word.';setTimeout(()=>b.classList.remove('wrong'),300);}
-}</script><script src="app.js"></script></body></html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Letter and Picture Match</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+.interactive-page{
+  position:relative;
+  width:100%;
+  line-height:0;
+  touch-action:manipulation;
+}
+
+.interactive-page .page-image{
+  width:100%;
+  height:auto;
+  display:block;
+}
+
+/* Invisible clickable areas */
+.match-hotspot{
+  position:absolute;
+  width:10%;
+  aspect-ratio:1;
+  padding:0;
+  border:0;
+  border-radius:18%;
+  background:transparent;
+  color:transparent;
+  cursor:pointer;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+}
+
+/* Hover */
+.match-hotspot:hover{
+  box-shadow:0 0 0 4px rgba(174,79,230,.28);
+}
+
+/* Selected letter */
+.match-hotspot.selected{
+  box-shadow:0 0 0 5px rgba(174,79,230,.75);
+  background:rgba(174,79,230,.12);
+}
+
+/* Correct */
+.match-hotspot.correct{
+  box-shadow:0 0 0 6px rgba(55,190,90,.85);
+  background:rgba(55,190,90,.16);
+}
+
+/* Wrong */
+.match-hotspot.wrong{
+  box-shadow:0 0 0 5px rgba(240,70,70,.8);
+  background:rgba(240,70,70,.12);
+  animation:shake .22s linear 2;
+}
+
+.match-hotspot:disabled{
+  cursor:default;
+}
+
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  25%{transform:translateX(-4px)}
+  75%{transform:translateX(4px)}
+}
+
+
+/* =========================
+   LETTER POSITIONS
+   ========================= */
+
+.letter-a{top:37.3%;left:21.8%}
+.letter-b{top:50.6%;left:21.8%}
+.letter-c{top:63.6%;left:21.8%}
+.letter-d{top:76.7%;left:21.8%}
+.letter-e{top:89.8%;left:21.8%}
+
+
+/* =========================
+   PICTURE POSITIONS
+   ========================= */
+
+.picture-dog{
+  top:34.6%;
+  left:66.3%;
+}
+
+.picture-elephant{
+  top:47.8%;
+  left:66.3%;
+}
+
+.picture-apple{
+  top:61.0%;
+  left:66.3%;
+}
+
+.picture-cat{
+  top:74.1%;
+  left:66.3%;
+}
+
+.picture-ball{
+  top:87.2%;
+  left:66.3%;
+}
+
+</style>
+</head>
+
+
+<body>
+
+<main class="booklet">
+
+<div class="interactive-page">
+
+<img
+  src="pomi-page-5.png"
+  alt="Letter and Picture Match"
+  class="page-image"
+>
+
+
+<!-- =========================
+     LETTERS
+========================= -->
+
+<button
+  class="match-hotspot letter-a"
+  data-letter="A"
+  aria-label="Letter A"
+  onclick="chooseLetter(this)">
+</button>
+
+<button
+  class="match-hotspot letter-b"
+  data-letter="B"
+  aria-label="Letter B"
+  onclick="chooseLetter(this)">
+</button>
+
+<button
+  class="match-hotspot letter-c"
+  data-letter="C"
+  aria-label="Letter C"
+  onclick="chooseLetter(this)">
+</button>
+
+<button
+  class="match-hotspot letter-d"
+  data-letter="D"
+  aria-label="Letter D"
+  onclick="chooseLetter(this)">
+</button>
+
+<button
+  class="match-hotspot letter-e"
+  data-letter="E"
+  aria-label="Letter E"
+  onclick="chooseLetter(this)">
+</button>
+
+
+<!-- =========================
+     PICTURES
+========================= -->
+
+<!-- Dog = D -->
+<button
+  class="match-hotspot picture-dog"
+  data-picture="D"
+  aria-label="Dog"
+  onclick="choosePicture(this)">
+</button>
+
+<!-- Elephant = E -->
+<button
+  class="match-hotspot picture-elephant"
+  data-picture="E"
+  aria-label="Elephant"
+  onclick="choosePicture(this)">
+</button>
+
+<!-- Apple = A -->
+<button
+  class="match-hotspot picture-apple"
+  data-picture="A"
+  aria-label="Apple"
+  onclick="choosePicture(this)">
+</button>
+
+<!-- Cat = C -->
+<button
+  class="match-hotspot picture-cat"
+  data-picture="C"
+  aria-label="Cat"
+  onclick="choosePicture(this)">
+</button>
+
+<!-- Ball = B -->
+<button
+  class="match-hotspot picture-ball"
+  data-picture="B"
+  aria-label="Ball"
+  onclick="choosePicture(this)">
+</button>
+
+</div>
+
+
+<!-- =========================
+     SCORE AND CONTROLS
+========================= -->
+
+<section class="controls">
+
+<div class="score" id="score">
+0 / 5 matched
+</div>
+
+<div class="message" id="message"></div>
+
+
+<!--
+     ONE NEXT BUTTON ONLY
+     This appears after all 5
+     matches are completed.
+-->
+
+<a
+  id="next"
+  class="navbtn next"
+  href="pomi-page-6.html"
+>
+NEXT →
+</a>
+
+
+<!-- =========================
+     BOTTOM NAVIGATION
+========================= -->
+
+<div class="footer-nav">
+
+<a
+  class="navbtn"
+  href="pomi-page-4.html"
+>
+← BACK
+</a>
+
+<a
+  class="navbtn"
+  href="index.html"
+>
+🏠 HOME
+</a>
+
+</div>
+
+</section>
+
+</main>
+
+
+<!-- =========================
+     GAME JAVASCRIPT
+========================= -->
+
+<script>
+
+let selectedLetter = null;
+let matched = 0;
+
+
+/* =========================
+   SELECT LETTER
+========================= */
+
+function chooseLetter(button){
+
+  if(button.classList.contains('correct')){
+    return;
+  }
+
+  /* Remove previous selection */
+  document
+    .querySelectorAll('.match-hotspot')
+    .forEach(function(item){
+      item.classList.remove('selected');
+    });
+
+  selectedLetter = button;
+
+  button.classList.add('selected');
+
+  document.getElementById('message').textContent =
+    '🐾 Now choose the picture that starts with ' +
+    button.dataset.letter + '!';
+}
+
+
+/* =========================
+   SELECT PICTURE
+========================= */
+
+function choosePicture(button){
+
+  /* No letter selected */
+  if(!selectedLetter){
+
+    document.getElementById('message').textContent =
+      '👆 First choose a letter.';
+
+    return;
+  }
+
+
+  /* Already matched */
+  if(button.classList.contains('correct')){
+    return;
+  }
+
+
+  const letter =
+    selectedLetter.dataset.letter;
+
+  const picture =
+    button.dataset.picture;
+
+
+  /* =========================
+     CORRECT ANSWER
+  ========================= */
+
+  if(letter === picture){
+
+    selectedLetter.classList.remove('selected');
+
+    selectedLetter.classList.add('correct');
+
+    button.classList.add('correct');
+
+    selectedLetter.disabled = true;
+    button.disabled = true;
+
+    matched++;
+
+    document.getElementById('score').textContent =
+      matched + ' / 5 matched';
+
+    document.getElementById('message').textContent =
+      '🎉 Great job! That is a match!';
+
+    selectedLetter = null;
+
+
+    /* =========================
+       ALL 5 COMPLETED
+    ========================= */
+
+    if(matched === 5){
+
+      markPomiDone(5);
+
+      document.getElementById('message').textContent =
+        '🎉 Amazing! You matched all five letters and pictures!';
+
+      /* Show the ONE NEXT button */
+      document.getElementById('next').style.display =
+        'inline-block';
+    }
+
+  }
+
+
+  /* =========================
+     WRONG ANSWER
+  ========================= */
+
+  else{
+
+    button.classList.add('wrong');
+
+    document.getElementById('message').textContent =
+      '😊 Try again! Think about the first sound of the word.';
+
+    setTimeout(function(){
+
+      button.classList.remove('wrong');
+
+    },450);
+  }
+
+}
+
+</script>
+
+<script src="app.js"></script>
+
+</body>
+</html>
