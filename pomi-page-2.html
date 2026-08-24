@@ -3,22 +3,70 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Story Time with Pomi</title>
+
 <link rel="stylesheet" href="style.css">
+
+<style>
+/* =========================================
+   PAGE 2 - NEXT BUTTON OVERRIDE
+   ========================================= */
+
+#page2NextButton {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  margin: 10px auto !important;
+}
+
+/* Keep the button easy to tap on phones */
+#page2NextButton {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+/* Make the controls comfortable on smaller screens */
+@media (max-width: 600px) {
+
+  .controls {
+    width: 92%;
+    margin: 0 auto;
+  }
+
+  #page2NextButton {
+    display: inline-block !important;
+    padding: 13px 28px;
+    font-size: 16px;
+  }
+
+}
+</style>
+
 </head>
 
 <body>
 
 <main class="booklet">
 
-  <!-- PAGE IMAGE -->
+  <!-- ==============================
+       STORY PAGE IMAGE
+       ============================== -->
+
   <img 
-    src="pomi-page-2.png" 
-    alt="Story Time with Pomi" 
+    src="pomi-page-2.png"
+    alt="Story Time with Pomi"
     class="page-image"
   >
 
-  <!-- INTERACTIVE SECTION -->
+
+  <!-- ==============================
+       INTERACTIVE SECTION
+       ============================== -->
+
   <section class="controls">
 
     <h2>📖 Story Time with Pomi</h2>
@@ -27,28 +75,47 @@
       Read the story on the page above. Try to spot the letters A–E.
     </p>
 
-    <!-- TIMER -->
-    <div class="score" id="timer">1:00</div>
 
-    <button 
-      id="timerBtn" 
+    <!-- OPTIONAL 1-MINUTE TIMER -->
+
+    <div 
+      class="score" 
+      id="readingTimer"
+    >
+      1:00
+    </div>
+
+
+    <button
+      id="readingTimerButton"
       class="navbtn"
+      type="button"
       onclick="startReadingTimer()"
     >
       START READING TIMER
     </button>
 
-    <div 
-      class="message" 
-      id="message"
-    ></div>
 
-    <!-- ONLY ONE NEXT BUTTON -->
-    <a 
-      id="next" 
-      class="navbtn next" 
+    <!-- MESSAGE -->
+
+    <div
+      class="message"
+      id="readingMessage"
+    >
+      📖 Read the story at your own pace.
+    </div>
+
+
+    <!-- ==================================
+         NEXT BUTTON
+         ALWAYS AVAILABLE
+         ================================== -->
+
+    <a
+      id="page2NextButton"
+      class="navbtn"
       href="pomi-page-3.html"
-      style="display:none;"
+      onclick="finishPage2()"
     >
       NEXT →
     </a>
@@ -59,9 +126,15 @@
 
 
 <script>
+
+/* =========================================
+   OPTIONAL READING TIMER
+   ========================================= */
+
 let timeLeft = 60;
 let timerRunning = false;
 let timerInterval = null;
+
 
 function startReadingTimer() {
 
@@ -71,25 +144,39 @@ function startReadingTimer() {
 
   timerRunning = true;
 
-  const timer = document.getElementById("timer");
-  const button = document.getElementById("timerBtn");
-  const message = document.getElementById("message");
-  const next = document.getElementById("next");
+  const timer =
+    document.getElementById("readingTimer");
+
+  const button =
+    document.getElementById("readingTimerButton");
+
+  const message =
+    document.getElementById("readingMessage");
+
 
   button.disabled = true;
   button.textContent = "READING...";
 
-  message.textContent = "📖 Keep reading and look for the letters A–E!";
+  message.textContent =
+    "📖 Keep reading and look for the letters A–E!";
+
 
   timerInterval = setInterval(function() {
 
     timeLeft--;
 
-    const minutes = Math.floor(timeLeft / 60);
-    const seconds = timeLeft % 60;
+    const minutes =
+      Math.floor(timeLeft / 60);
+
+    const seconds =
+      timeLeft % 60;
+
 
     timer.textContent =
-      minutes + ":" + String(seconds).padStart(2, "0");
+      minutes +
+      ":" +
+      String(seconds).padStart(2, "0");
+
 
     if (timeLeft <= 0) {
 
@@ -100,25 +187,117 @@ function startReadingTimer() {
       timer.textContent = "0:00";
 
       button.disabled = false;
-      button.textContent = "READING COMPLETE!";
+
+      button.textContent =
+        "READING COMPLETE!";
 
       message.textContent =
-        "🎉 Great job! You finished the reading time!";
+        "🎉 Great job! You finished the reading timer!";
 
-      /* Mark Page 2 as completed */
-      if (typeof markPomiDone === "function") {
-        markPomiDone(2);
-      }
-
-      /* Show the ONE NEXT button */
-      next.style.display = "inline-block";
     }
 
   }, 1000);
+
 }
+
+
+/* =========================================
+   PAGE 2 COMPLETION
+   ========================================= */
+
+function finishPage2() {
+
+  /*
+   * If your app.js has the completion system,
+   * mark Page 2 as completed.
+   */
+
+  if (typeof markPomiDone === "function") {
+    markPomiDone(2);
+  }
+
+}
+
+
+/* =========================================
+   EXTRA SAFETY
+   Make sure NEXT stays visible even if
+   another script tries to hide it.
+   ========================================= */
+
+window.addEventListener("load", function() {
+
+  const nextButton =
+    document.getElementById("page2NextButton");
+
+  if (nextButton) {
+
+    nextButton.style.setProperty(
+      "display",
+      "inline-block",
+      "important"
+    );
+
+    nextButton.style.setProperty(
+      "visibility",
+      "visible",
+      "important"
+    );
+
+    nextButton.style.setProperty(
+      "opacity",
+      "1",
+      "important"
+    );
+
+  }
+
+});
+
 </script>
 
+
 <script src="app.js"></script>
+
+
+<script>
+
+/*
+ * Run again after app.js loads.
+ * This prevents the old Page 2 logic from
+ * hiding the new NEXT button.
+ */
+
+window.addEventListener("load", function() {
+
+  const nextButton =
+    document.getElementById("page2NextButton");
+
+  if (nextButton) {
+
+    nextButton.style.setProperty(
+      "display",
+      "inline-block",
+      "important"
+    );
+
+    nextButton.style.setProperty(
+      "visibility",
+      "visible",
+      "important"
+    );
+
+    nextButton.style.setProperty(
+      "opacity",
+      "1",
+      "important"
+    );
+
+  }
+
+});
+
+</script>
 
 </body>
 </html>
